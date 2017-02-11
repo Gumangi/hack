@@ -1,5 +1,4 @@
-# Copyright 2012 Jared Boone
-# Copyright 2013 Benjamin Vernoux
+# Copyright 2012 Jared Boone <jared@sharebrained.com>
 #
 # This file is part of HackRF.
 #
@@ -19,46 +18,19 @@
 # Boston, MA 02110-1301, USA.
 #
 
-# Based heavily upon the libftdi cmake setup.
+# Top directory CMake project for HackRF firmware
 
-cmake_minimum_required(VERSION 2.8)
-project(hackrf-tools C)
-set(MAJOR_VERSION 0)
-set(MINOR_VERSION 4)
-set(PACKAGE hackrf-tools)
-set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION})
-set(VERSION ${VERSION_STRING})
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/modules)
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_TOOLCHAIN_FILE toolchain-arm-cortex-m.cmake)
 
-if(MSVC)
-include_directories(getopt)
-add_definitions(/D _CRT_SECURE_NO_WARNINGS)
-else()
-add_definitions(-Wall)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
-endif()
+project (hackrf_firmware_all)
 
-if(NOT libhackrf_SOURCE_DIR)
-find_package(LIBHACKRF REQUIRED)
-include_directories(${LIBHACKRF_INCLUDE_DIR})
-else()
-include_directories(${libhackrf_SOURCE_DIR}/src)
-endif()
-
-add_subdirectory(src)
-
-########################################################################
-# Create uninstall target
-########################################################################
-
-if(NOT hackrf_all_SOURCE_DIR)
-configure_file(
-    ${PROJECT_SOURCE_DIR}/../cmake/cmake_uninstall.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-@ONLY)
-
-
-add_custom_target(uninstall
-    ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-)
-endif()
+add_subdirectory(blinky)
+add_subdirectory(mixertx)
+add_subdirectory(sgpio)
+add_subdirectory(sgpio-rx)
+add_subdirectory(simpletx)
+add_subdirectory(startup)
+add_subdirectory(startup_systick)
+add_subdirectory(startup_systick_perfo)
+add_subdirectory(hackrf_usb)
